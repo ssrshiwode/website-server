@@ -1,18 +1,18 @@
 const router = require('../../router');
 const {activity_20200610_user_model} = require('./model');
 
-router.get('/activity/20200610/user/:phone', async (ctx, next) => {
+router.get('/activity/20200610/user', async (ctx, next) => {
     try {
-        let phone = ctx.params.phone;
+        let phone = ctx.request.query.phone;
         ctx.response.body = await activity_20200610_user_model.findOne({phone}, {_id: 0, __v: 0});
     } catch (e) {
         ctx.throw(400, e.message);
     }
 });
 
-router.post('/activity/20200610/user/:phone', async (ctx, next) => {
+router.post('/activity/20200610/user', async (ctx, next) => {
     try {
-        let phone = ctx.params.phone;
+        let phone = ctx.request.body.phone;
         let activity_20200610_user = new activity_20200610_user_model({phone});
         await activity_20200610_user.save();
         let count = await activity_20200610_user_model.count();
@@ -22,11 +22,20 @@ router.post('/activity/20200610/user/:phone', async (ctx, next) => {
     }
 });
 
-router.get('/activity/20200610/user/rank/:phone', async (ctx, next) => {
+router.get('/activity/20200610/user/rank', async (ctx, next) => {
     try {
-        let phone = ctx.params.phone;
+        let phone = ctx.request.query.phone;
         let user = await activity_20200610_user_model.findOne({phone}, {_id: 0, __v: 0});
         let count = await activity_20200610_user_model.count({createdAt: {$lt: user.createdAt}});
+        ctx.response.body = count + 1;
+    } catch (e) {
+        ctx.throw(400, e.message);
+    }
+});
+
+router.get('/activity/20200610/user/count', async (ctx, next) => {
+    try {
+        let count = await activity_20200610_user_model.count();
         ctx.response.body = count + 1;
     } catch (e) {
         ctx.throw(400, e.message);
