@@ -18,6 +18,6 @@ app.use(require('./router').routes());
 
 db.once('open', function () {
     app.listen(3101);
-    console.log('db connected and app started: http://localhost:3000')
+    console.log('db connected and app started: http://localhost:3101')
 });
 
