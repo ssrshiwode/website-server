@@ -22,3 +22,13 @@ router.post('/activity/20200610/user/:phone', async (ctx, next) => {
     }
 });
 
+router.get('/activity/20200610/user/rank/:phone', async (ctx, next) => {
+    try {
+        let phone = ctx.params.phone;
+        let user = await activity_20200610_user_model.findOne({phone}, {_id: 0, __v: 0});
+        let count = await activity_20200610_user_model.count({createdAt: {$lt: user.createdAt}});
+        ctx.response.body = count + 1;
+    } catch (e) {
+        ctx.throw(400, e.message);
+    }
+});
