@@ -1,6 +1,9 @@
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const app = new Koa();
+const db = require('./mongodb');
+require('./activity');
+
 // log request URL:
 app.use(async (ctx, next) => {
     console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
@@ -11,8 +14,10 @@ app.use(async (ctx, next) => {
 app.use(bodyParser());
 
 // add controllers:
-require('./activity');
 app.use(require('./router').routes());
 
-app.listen(3000);
-console.log('app started at port 3000...');
+db.once('open', function () {
+    app.listen(3101);
+    console.log('db connected and app started: http://localhost:3000')
+});
+
