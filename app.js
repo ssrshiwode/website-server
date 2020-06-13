@@ -19,6 +19,15 @@ app.use(async (ctx, next) => {
 // parse request body:
 app.use(bodyParser());
 
+app.use(async (ctx, next) => {
+    try {
+        await next()
+    } catch (error) {
+        ctx.status = error.status || error.statusCode;
+        ctx.response.body = error.message;
+    }
+});
+
 // add controllers:
 app.use(require('./router').routes());
 
