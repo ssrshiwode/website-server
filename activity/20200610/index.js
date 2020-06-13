@@ -18,7 +18,7 @@ router.post('/activity/20200610/user/:phone', async (ctx, next) => {
         let count = await activity_20200610_user_model.count();
         ctx.response.body = {phone, count};
     } catch (e) {
-        ctx.throw(400, e.message);
+        ctx.throw(406, e.message);
     }
 });
 
