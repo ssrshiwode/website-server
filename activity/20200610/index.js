@@ -13,6 +13,7 @@ router.get('/activity/20200610/user', async (ctx, next) => {
 router.post('/activity/20200610/user', async (ctx, next) => {
     try {
         let phone = ctx.request.body.phone;
+        if (phone.length !== 11) throw Error('手机号信息错误!');
         let activity_20200610_user = new activity_20200610_user_model({phone});
         await activity_20200610_user.save();
         let count = await activity_20200610_user_model.count();
@@ -44,7 +45,11 @@ router.get('/activity/20200610/user/count', async (ctx, next) => {
 
 router.get('/activity/20200610/rank/list', async (ctx, next) => {
     try {
-        ctx.response.body = await activity_20200610_user_model.find({}, {phone: 1, createdAt: 1}, {limit: 200});
+        let list = await activity_20200610_user_model.find({}, {_id: 0, phone: 1, createdAt: 1}, {limit: 200});
+        ctx.response.body = list.map(user => {
+            user.phone = user.phone.substring(0, 3) + '*****' + user.phone.substring(8);
+            return user;
+        })
     } catch (e) {
         ctx.throw(400, e.message);
     }
