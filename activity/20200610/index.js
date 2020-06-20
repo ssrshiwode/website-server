@@ -13,7 +13,9 @@ router.get('/activity/20200610/user', async (ctx, next) => {
 router.post('/activity/20200610/user', async (ctx, next) => {
     try {
         let phone = ctx.request.body.phone;
-        if (phone.length !== 11) throw Error('手机号信息错误!');
+        if (phone.length !== 11) {
+            return ctx.throw(400, '手机号信息错误');
+        }
         let activity_20200610_user = new activity_20200610_user_model({phone});
         await activity_20200610_user.save();
         let count = await activity_20200610_user_model.count();
