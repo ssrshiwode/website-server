@@ -41,3 +41,11 @@ router.get('/activity/20200610/user/count', async (ctx, next) => {
         ctx.throw(400, e.message);
     }
 });
+
+router.get('/activity/20200610/rank/list', async (ctx, next) => {
+    try {
+        ctx.response.body = await activity_20200610_user_model.find({}, {phone: 1, createdAt: 1}, {limit: 200});
+    } catch (e) {
+        ctx.throw(400, e.message);
+    }
+});
