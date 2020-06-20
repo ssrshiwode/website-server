@@ -14,14 +14,20 @@ router.post('/activity/20200610/user', async (ctx, next) => {
     try {
         let phone = ctx.request.body.phone;
         if (phone.length !== 11) {
-            return ctx.throw(400, '手机号信息错误');
+            let err = new Error('手机号信息错误');
+            err.code = 400;
+            ctx.throw(err);
         }
         let activity_20200610_user = new activity_20200610_user_model({phone});
         await activity_20200610_user.save();
         let count = await activity_20200610_user_model.count();
         ctx.response.body = {phone, count};
     } catch (e) {
-        ctx.throw(406, e.message);
+        if (e.code === 11000) {
+            e.code = 406;
+            e.message = '手机号已提交过';
+        }
+        ctx.throw(e.code || 400, e.message);
     }
 });
 
