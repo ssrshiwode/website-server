@@ -40,106 +40,53 @@ router.post('/activity/keyhole/user', async (ctx, next) => {
         users.forEach((user, index) => {
             index++;
             if (user.phone === phone) rank = index;
-            let userPhone = {
-                phone: formatPhone(user.phone),
-                rank: index
-            };
+            let userPhone = {phone: formatPhone(user.phone), rank: index};
             if (index <= 10) rankList.push(userPhone);
         });
         if (rank > 500) message = '奖励已全部领完';
         switch (rank) {
             case 11:
-                rankList.push({
-                    rank,
-                    phone: formatPhone(users[rank - 1].phone)
-                });
+                rankList.push({rank, phone: formatPhone(users[rank - 1].phone)});
                 break;
             case 12:
-                rankList.push({
-                    rank: rank - 1,
-                    phone: formatPhone(users[rank - 2].phone)
-                });
-                rankList.push({
-                    rank,
-                    phone: formatPhone(users[rank - 1].phone)
-                });
+                rankList.push({rank: rank - 1, phone: formatPhone(users[rank - 2].phone)});
+                rankList.push({rank, phone: formatPhone(users[rank - 1].phone)});
                 break;
             case 13:
-                rankList.push({
-                    rank: rank - 2,
-                    phone: formatPhone(users[rank - 3].phone)
-                });
-                rankList.push({
-                    rank: rank - 1,
-                    phone: formatPhone(users[rank - 2].phone)
-                });
-                rankList.push({
-                    rank,
-                    phone: formatPhone(users[rank - 1].phone)
-                });
+                rankList.push({rank: rank - 2, phone: formatPhone(users[rank - 3].phone)});
+                rankList.push({rank: rank - 1, phone: formatPhone(users[rank - 2].phone)});
+                rankList.push({rank, phone: formatPhone(users[rank - 1].phone)});
                 break;
             case 14:
-                rankList.push({rank: '*', phone: '*****'});
-                rankList.push({
-                    rank: rank - 2,
-                    phone: formatPhone(users[rank - 3].phone)
-                });
-                rankList.push({
-                    rank: rank - 1,
-                    phone: formatPhone(users[rank - 2].phone)
-                });
-                rankList.push({
-                    rank,
-                    phone: formatPhone(users[rank - 1].phone)
-                });
+                rankList.push({rank: rank - 3, phone: formatPhone(users[rank - 4].phone)});
+                rankList.push({rank: rank - 2, phone: formatPhone(users[rank - 3].phone)});
+                rankList.push({rank: rank - 1, phone: formatPhone(users[rank - 2].phone)});
+                rankList.push({rank, phone: formatPhone(users[rank - 1].phone)});
                 break;
             case 15:
-                rankList.push({rank: '*', phone: '*****'});
-                rankList.push({rank: '*', phone: '*****'});
-                rankList.push({
-                    rank: rank - 2,
-                    phone: formatPhone(users[rank - 3].phone)
-                });
-                rankList.push({
-                    rank: rank - 1,
-                    phone: formatPhone(users[rank - 2].phone)
-                });
-                rankList.push({
-                    rank,
-                    phone: formatPhone(users[rank - 1].phone)
-                });
+                rankList.push({rank: rank - 4, phone: formatPhone(users[rank - 5].phone)});
+                rankList.push({rank: rank - 3, phone: formatPhone(users[rank - 4].phone)});
+                rankList.push({rank: rank - 2, phone: formatPhone(users[rank - 3].phone)});
+                rankList.push({rank: rank - 1, phone: formatPhone(users[rank - 2].phone)});
+                rankList.push({rank, phone: formatPhone(users[rank - 1].phone)});
                 break;
             default:
                 if (rank >= 16) {
-                    rankList.push({rank: '*', phone: '*****'});
-                    rankList.push({rank: '*', phone: '*****'});
-                    rankList.push({rank: '*', phone: '*****'});
-                    rankList.push({
-                        rank: rank - 2,
-                        phone: formatPhone(users[rank - 3].phone)
-                    });
-                    rankList.push({
-                        rank: rank - 1,
-                        phone: formatPhone(users[rank - 2].phone)
-                    });
-                    rankList.push({
-                        rank,
-                        phone: formatPhone(users[rank - 1].phone)
-                    });
-                    if (!!users[rank]) rankList.push({
-                        rank: rank + 1,
-                        phone: formatPhone(users[rank].phone)
-                    });
-                    if (!!users[rank + 1]) rankList.push({
-                        rank: rank + 2,
-                        phone: formatPhone(users[rank + 1].phone)
-                    });
+                    rankList.push({rank: '', phone: '……'});
+                    rankList.push({rank: rank - 4, phone: formatPhone(users[rank - 5].phone)});
+                    rankList.push({rank: rank - 3, phone: formatPhone(users[rank - 4].phone)});
+                    rankList.push({rank: rank - 2, phone: formatPhone(users[rank - 3].phone)});
+                    rankList.push({rank: rank - 1, phone: formatPhone(users[rank - 2].phone)});
+                    rankList.push({rank, phone: formatPhone(users[rank - 1].phone)});
+                    if (!!users[rank]) rankList.push({rank: rank + 1, phone: formatPhone(users[rank].phone)});
+                    if (!!users[rank + 1]) rankList.push({rank: rank + 2, phone: formatPhone(users[rank + 1].phone)});
+                    if (!!users[rank + 2]) rankList.push({rank: rank + 3, phone: formatPhone(users[rank + 2].phone)});
+                    if (!!users[rank + 3]) rankList.push({rank: rank + 4, phone: formatPhone(users[rank + 3].phone)});
+                    if (!!users[rank + 4]) rankList.push({rank: rank + 5, phone: formatPhone(users[rank + 4].phone)});
                 }
                 break;
         }
-        rankList.push({rank: '*', phone: '*****'});
-        rankList.push({rank: '*', phone: '*****'});
-        rankList.push({rank: '*', phone: '*****'});
+        rankList.push({rank: '', phone: '……'});
         ctx.response.body = {phone, rank, rankList, message};
     } catch (e) {
         ctx.throw(e.code || 400, e.message);
