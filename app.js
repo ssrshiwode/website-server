@@ -1,24 +1,32 @@
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const app = new Koa();
-const db = require('./mongodb');
 require('./activity');
+require('./puzzle')
 
-// log request URL:
+// CORS
 app.use(async (ctx, next) => {
-    console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
     ctx.set('Access-Control-Allow-Origin', '*');
     ctx.set('Access-Control-Allow-Methods', '*');
-    if (ctx.method === 'OPTIONS') {
-        ctx.body = 200;
-    } else {
-        await next();
-    }
-});
+    if (ctx.method === 'OPTIONS')
+        ctx.body = 200
+    else await next()
+})
 
 // parse request body:
 app.use(bodyParser());
 
+// log
+app.use(async (ctx, next) => {
+    console.log('------------>')
+    console.log("request:", {method: ctx.method, url: ctx.url, query: ctx.query, body: ctx.request.body});
+    await next()
+    console.log('<------------')
+    console.log("response:", {status: ctx.status, message: ctx.message, body: ctx.body});
+    console.log('\n')
+})
+
+// error handler
 app.use(async (ctx, next) => {
     try {
         await next()
@@ -28,11 +36,9 @@ app.use(async (ctx, next) => {
     }
 });
 
-// add controllers:
+// router
 app.use(require('./router').routes());
 
-db.once('open', function () {
-    app.listen(3101);
-    console.log('db connected and app started: http://localhost:3101')
-});
-
+app.listen(3101, () => {
+    console.log('app started: http://localhost:3101')
+})
