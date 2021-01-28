@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const {websiteDB} = require('../mongodb')
 
 module.exports = {
-    activity_user_model: mongoose.model('activity_user', new mongoose.Schema({
+    activity_user_model: websiteDB.model('activity_user', new mongoose.Schema({
         userKey: {
             type: String,
             required: true,
