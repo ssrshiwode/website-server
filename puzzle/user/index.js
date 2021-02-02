@@ -28,25 +28,19 @@ router.get('/user/annual_report', async (ctx, next) => {
                 penetralium: 0,
                 novel: 0
             }
-        if (user.others && user.others.games && user.others.games.unlock) {
-            let unlock = user.others.games.unlock
-            for (let unlockId in unlock) {
-                if (!unlock.hasOwnProperty(unlockId)) continue
-                let games = await GameModel.find({unlockId}, {data: 0})
-                console.log(unlockId + ':' + games);
-                for (let game of games) {
-                    let gameData = {
-                        gameId: game.gameId,
-                        gameName: game.gameName,
-                        coverImage: game.coverImage,
-                        start: unlock[unlockId]
-                    }
-                    gameData.category = game.others && game.others.category ? game.others.category : ''
-                    let userGame = await UserGameModel.findOne({userId, gameId: game.gameId}, {others: 1}).lean()
-                    gameData.gameLong = userGame && userGame.others && userGame.others.gameLong ? userGame.others.gameLong : 0
-                    data.games.push(gameData)
-                }
+        let userGames = await UserGameModel.find({userId},{gameId: 1, others: 1})
+        for (let {gameId , others} of userGames) {
+            let game = await GameModel.findOne({gameId}, {data: 0}).lean()
+            if (!game) continue
+            let gameData = {
+                gameId: game.gameId,
+                gameName: game.gameName,
+                coverImage: game.coverImage
             }
+            gameData.category = game.others && game.others.category ? game.others.category : ''
+            gameData.start = others && others.startTime ? others.startTime : new Date()
+            gameData.gameLong = others && others.gameLong ? others.gameLong : 0
+            data.games.push(gameData)
         }
         if (data.games.length !== 0) {
             for (let game of data.games) {
