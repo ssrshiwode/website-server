@@ -25,7 +25,7 @@ router.post('/activity/user', async (ctx, next) => {
     } catch (e) {
         if (e.code === 11000) {
             e.code = 406;
-            e.message = '手机号已提交过';
+            e.message = '已提交过';
         }
         ctx.throw(e.code || 400, e.message);
     }
