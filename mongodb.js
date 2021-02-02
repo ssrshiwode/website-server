@@ -18,7 +18,7 @@ let websiteDB = mongoose.createConnection(website_connection_uri, options, err =
     } else console.log('website db connect success')
 })
 
-process.env.NODE_ENV === 'pro' ? puzzle_connection_uri = puzzle_connection_uri_pro : puzzle_connection_uri = puzzle_connection_uri_dev
+puzzle_connection_uri = process.argv[2] === '--NODE_ENV=pro' ? puzzle_connection_uri_pro : puzzle_connection_uri_dev
 
 let puzzleDB = mongoose.createConnection(puzzle_connection_uri, options, err => {
     if (err) {
