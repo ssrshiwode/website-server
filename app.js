@@ -13,6 +13,12 @@ app.use(async (ctx, next) => {
     else await next()
 })
 
+// replace '/website-server' in req url
+app.use(async (ctx, next) => {
+    if (ctx.url.startsWith('/website-server')) ctx.url = ctx.url.replace('/website-server', '')
+    await next()
+})
+
 // parse request body:
 app.use(bodyParser());
 
