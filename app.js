@@ -2,7 +2,7 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const app = new Koa();
 require('./activity');
-require('./puzzle')
+require('./puzzle/router')
 
 // CORS
 app.use(async (ctx, next) => {

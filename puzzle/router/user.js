@@ -1,6 +1,6 @@
 const router = require('../../router')
-const {UserModel, GameModel, UserGameModel} = require('./model')
-const {getDateByMongooseId} = require('./util')
+const {UserModel, GameModel, UserGameModel} = require('../models')
+const {getDateByMongooseId} = require('../utils/util')
 
 router.get('/user/annual_report', async (ctx, next) => {
     try {
@@ -65,14 +65,15 @@ router.get('/user/annual_report', async (ctx, next) => {
         }
         gameList.total = data.games.length
         data.end = (new Date("2021-02-11 00:00").getTime() - createdAt.getTime()) > 0
-                ? Math.floor((new Date("2021-02-11 00:00").getTime() - createdAt.getTime()) / 86400000)
-                : 0
+            ? Math.floor((new Date("2021-02-11 00:00").getTime() - createdAt.getTime()) / 86400000)
+            : 0
         data.nickname = user.others && user.others.nickname ? user.others.nickname : ''
         data.headimgurl = user.others && user.others.headimgurl ? user.others.headimgurl : ''
         data.start = createdAt.getFullYear()
         data.firstGame = firstGame
         data.playLongGame = playLongGame
         data.gameList = gameList
+        delete data.games
         ctx.body = data
     } catch (e) {
         console.error(e);
